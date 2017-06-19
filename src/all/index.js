@@ -30,7 +30,7 @@ export function compareIntThenLex(a, b) {
 export function calcSalt({
         sensitive=false, // case sensitive
         len=8 // length of salt
-    }) {
+    }={}) {
 	// salt generator from http://mxr.mozilla.org/mozilla-aurora/source/toolkit/profile/content/createProfileWizard.js?raw=1*/
 
 	let mozKSaltTable = sensitive ? [
