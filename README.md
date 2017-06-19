@@ -1,3 +1,3 @@
 ### Installation
 
-    npm install cmn@https://github.com/cmn/cmn.git --save
+    npm install cmn@https://github.com/Noitidart/cmn.git --save
