@@ -8,5 +8,6 @@ export default class Library {
 }
 
 export function showMsg(msg) {
+  console.log('in devvvvvvvvvvvvvv');
   alert(msg);
 }

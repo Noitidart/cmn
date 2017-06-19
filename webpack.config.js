@@ -9,9 +9,28 @@ let libraryName = 'cmn';
 
 let plugins = [], outputFile;
 
+let rules = [
+  {
+    test: /(\.jsx|\.js)$/,
+    loader: 'babel-loader',
+    exclude: /(node_modules|bower_components)/
+  },
+  {
+    test: /(\.jsx|\.js)$/,
+    loader: 'eslint-loader',
+    exclude: /node_modules/
+  }
+];
+
 if (env === 'build') {
   plugins.push(new UglifyJsPlugin({ minimize: true }));
   outputFile = libraryName + '.min.js';
+  rules.unshift({
+    test:/\.js$/,
+    exclude:/node_modules/,
+    loader:'string-replace-loader?search=^.*?console\.[a-zA-Z].*?$&flags=gm&replace=',
+    enforce:'pre'
+  });
 } else {
   outputFile = libraryName + '.js';
 }
@@ -27,18 +46,7 @@ const config = {
     umdNamedDefine: true
   },
   module: {
-    rules: [
-      {
-        test: /(\.jsx|\.js)$/,
-        loader: 'babel-loader',
-        exclude: /(node_modules|bower_components)/
-      },
-      {
-        test: /(\.jsx|\.js)$/,
-        loader: 'eslint-loader',
-        exclude: /node_modules/
-      }
-    ]
+    rules: rules
   },
   resolve: {
     modules: [path.resolve('./src')],

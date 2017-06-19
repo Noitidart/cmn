@@ -20,6 +20,7 @@
     "eslint": "3.19.0",
     "eslint-loader": "1.7.1",
     "mocha": "3.3.0",
+    "string-replace-loader": "^1.2.0",
     "webpack": "2.4.1",
     "yargs": "7.1.0"
   },
