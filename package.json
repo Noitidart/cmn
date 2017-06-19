@@ -1,0 +1,19 @@
+{
+  "name": "cmn",
+  "version": "1.0.0",
+  "description": "My common javascript functions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Noitidart/cmn.git"
+  },
+  "author": "Noitidart <noitidart@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Noitidart/cmn/issues"
+  },
+  "homepage": "https://github.com/Noitidart/cmn#readme"
+}
