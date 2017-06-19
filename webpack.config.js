@@ -23,13 +23,13 @@ let rules = [
 ];
 
 if (env === 'build') {
-  plugins.push(new UglifyJsPlugin({ minimize: true }));
+  // plugins.push(new UglifyJsPlugin({ minimize: true }));
   outputFile = libraryName + '.min.js';
   rules.unshift({
-    test:/\.js$/,
-    exclude:/node_modules/,
-    loader:'string-replace-loader?search=^.*?console\.[a-zA-Z].*?$&flags=gm&replace=',
-    enforce:'pre'
+    test: /\.js$/,
+    exclude: /node_modules/,
+    loader: 'string-replace-loader?search=^.*?console\.[a-zA-Z].*?$&flags=gm&replace=',
+    enforce: 'pre'
   });
 } else {
   outputFile = libraryName + '.js';
@@ -49,10 +49,13 @@ const config = {
     rules: rules
   },
   resolve: {
-    modules: [path.resolve('./src')],
+    modules: [path.resolve('./src'), 'node_modules'],
     extensions: ['.json', '.js']
   },
-  plugins: plugins
+  plugins: plugins,
+  externals: {
+    qs: 'qs'
+  }
 };
 
 module.exports = config;

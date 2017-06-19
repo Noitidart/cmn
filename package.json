@@ -1,8 +1,8 @@
 {
   "name": "cmn",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Produce universal library with webpack and es6",
-  "main": "lib/cmn.js",
+  "main": "lib/cmn.min.js",
   "scripts": {
     "build": "webpack --env build",
     "dev": "webpack --progress --colors --env dev",
@@ -20,13 +20,14 @@
     "eslint": "3.19.0",
     "eslint-loader": "1.7.1",
     "mocha": "3.3.0",
+    "qs": "^6.4.0",
     "string-replace-loader": "^1.2.0",
     "webpack": "2.4.1",
     "yargs": "7.1.0"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/krasimir/webpack-library-starter.git"
+    "url": "https://github.com/Noitidart/cmn.git"
   },
   "keywords": [
     "webpack",
@@ -37,10 +38,13 @@
     "umd",
     "commonjs"
   ],
-  "author": "Krasimir Tsonev",
+  "author": "Noitidart",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/krasimir/webpack-library-starter/issues"
+    "url": "https://github.com/Noitidart/cmn/issues"
   },
-  "homepage": "https://github.com/krasimir/webpack-library-starter"
+  "homepage": "https://github.com/Noitidart/cmn",
+  "dependencies": {
+    "qs": "^6.4.0"
+  }
 }
