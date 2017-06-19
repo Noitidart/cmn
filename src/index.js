@@ -6,3 +6,7 @@ export default class Library {
     return this._name;
   }
 }
+
+export function showMsg(msg) {
+  alert(msg);
+}
