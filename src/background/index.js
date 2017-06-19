@@ -1,6 +1,6 @@
-import fetch from './fetch-polyfill'
+import fetch from '../fetch-polyfill'
 
-import { dedupeCaseInsensitive, findClosestLocale, isObject } from './all'
+import { dedupeCaseInsensitive, findClosestLocale, isObject } from '../all'
 // requires extension-polyfill.js
 
 //scope: webextension background.js

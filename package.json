@@ -1,6 +1,6 @@
 {
   "name": "cmn",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Produce universal library with webpack and es6",
   "main": "lib/cmn.min.js",
   "scripts": {
