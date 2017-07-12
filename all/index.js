@@ -1,3 +1,7 @@
+export function average(arr) {
+    return sum(arr) / arr.length;
+}
+
 export function alphaSort(a, b) {
     return a.localeCompare(b);
 }
@@ -237,6 +241,10 @@ export async function retry(callback, {cnt, sec, interval=1000}={}) {
             else throw new Error(FAILED_KEYWORD);
         }
     }
+}
+
+export function sum(arr) {
+    return arr.reduce((sum, x) => sum + x);
 }
 
 // https://github.com/github/fetch/issues/175#issuecomment-284787564
