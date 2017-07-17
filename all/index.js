@@ -195,6 +195,15 @@ export function isObject(avar) {
     return Object.prototype.toString.call(avar) === '[object Object]' && avar.constructor.name === 'Object';
 }
 
+export function isEmpty(obj) {
+    // https://stackoverflow.com/a/32108184/1828637
+    for(const prop in obj) {
+        if(obj.hasOwnProperty(prop)) return false;
+    }
+
+    return true;
+}
+
 export function mapTruthy(target, mapper) {
     // target is array
     // mapper gets same args Array.prototype.map gets, currentValue, index, array
