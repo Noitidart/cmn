@@ -195,7 +195,7 @@ export function isObject(avar) {
     return Object.prototype.toString.call(avar) === '[object Object]' && avar.constructor.name === 'Object';
 }
 
-export function isEmpty(obj) {
+export function isObjectEmpty(obj) {
     // https://stackoverflow.com/a/32108184/1828637
     for(const prop in obj) {
         if(obj.hasOwnProperty(prop)) return false;
