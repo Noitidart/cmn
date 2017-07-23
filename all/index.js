@@ -298,3 +298,92 @@ export function genNonce(length) {
     }
     return nonce;
 }
+
+
+
+
+// https://stackoverflow.com/a/1499916/1828637
+export function stripTags(html) {
+    // html is text
+    return html.replace(/(<([^>]+)>)/ig, '');
+}
+
+// https://stackoverflow.com/a/36566052/1828637
+export function wordSimilarity(s1, s2) {
+  var longer = s1;
+  var shorter = s2;
+  if (s1.length < s2.length) {
+    longer = s2;
+    shorter = s1;
+  }
+  var longerLength = longer.length;
+  if (longerLength == 0) {
+    return 1.0;
+  }
+  return (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength);
+}
+function editDistance(s1, s2) {
+  s1 = s1.toLowerCase();
+  s2 = s2.toLowerCase();
+
+  var costs = new Array();
+  for (var i = 0; i <= s1.length; i++) {
+    var lastValue = i;
+    for (var j = 0; j <= s2.length; j++) {
+      if (i == 0)
+        costs[j] = j;
+      else {
+        if (j > 0) {
+          var newValue = costs[j - 1];
+          if (s1.charAt(i - 1) != s2.charAt(j - 1))
+            newValue = Math.min(Math.min(newValue, lastValue),
+              costs[j]) + 1;
+          costs[j - 1] = lastValue;
+          lastValue = newValue;
+        }
+      }
+    }
+    if (i > 0)
+      costs[s2.length] = lastValue;
+  }
+  return costs[s2.length];
+}
+
+function urlencode (str) {
+  //       discuss at: http://locutus.io/php/urlencode/
+  //      original by: Philip Peterson
+  //      improved by: Kevin van Zonneveld (http://kvz.io)
+  //      improved by: Kevin van Zonneveld (http://kvz.io)
+  //      improved by: Brett Zamir (http://brett-zamir.me)
+  //      improved by: Lars Fischer
+  //         input by: AJ
+  //         input by: travc
+  //         input by: Brett Zamir (http://brett-zamir.me)
+  //         input by: Ratheous
+  //      bugfixed by: Kevin van Zonneveld (http://kvz.io)
+  //      bugfixed by: Kevin van Zonneveld (http://kvz.io)
+  //      bugfixed by: Joris
+  // reimplemented by: Brett Zamir (http://brett-zamir.me)
+  // reimplemented by: Brett Zamir (http://brett-zamir.me)
+  //           note 1: This reflects PHP 5.3/6.0+ behavior
+  //           note 1: Please be aware that this function
+  //           note 1: expects to encode into UTF-8 encoded strings, as found on
+  //           note 1: pages served as UTF-8
+  //        example 1: urlencode('Kevin van Zonneveld!')
+  //        returns 1: 'Kevin+van+Zonneveld%21'
+  //        example 2: urlencode('http://kvz.io/')
+  //        returns 2: 'http%3A%2F%2Fkvz.io%2F'
+  //        example 3: urlencode('http://www.google.nl/search?q=Locutus&ie=utf-8')
+  //        returns 3: 'http%3A%2F%2Fwww.google.nl%2Fsearch%3Fq%3DLocutus%26ie%3Dutf-8'
+  str = (str + '')
+  // Tilde should be allowed unescaped in future versions of PHP (as reflected below),
+  // but if you want to reflect current
+  // PHP behavior, you would need to add ".replace(/~/g, '%7E');" to the following.
+  return encodeURIComponent(str)
+    .replace(/!/g, '%21')
+    .replace(/'/g, '%27')
+    .replace(/\(/g, '%28')
+    .replace(/\)/g, '%29')
+    .replace(/\*/g, '%2A')
+    .replace(/%20/g, '+')
+}
