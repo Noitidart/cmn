@@ -1,8 +1,6 @@
 import shallowEqual from 'recompose/shallowEqual'
 
-export { shallowEqual, deepEqual }
-
-function shallowEqualDepth(arrobj1, arrobj2, maxDepth=0) {
+export function shallowEqualDepth(arrobj1, arrobj2, maxDepth=0) {
     // maxDepth is 0 based, so maxDepth of 2 checks 3 levels
     const els1 = [arrobj1];
     const els2 = [arrobj2];
@@ -96,3 +94,5 @@ function flattenDepth1(arr) {
     // flattens 1 level deep, like a Object.entries
     return Array.prototype.concat(...arr);
 }
+
+export { shallowEqual }
