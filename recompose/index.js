@@ -15,30 +15,30 @@ export function shallowEqualDepth(arrobj1, arrobj2, maxDepth=0) {
         const el1 = els1.shift();
         const el2 = els2.shift();
 
-        console.log('will now compare el1:', el1, 'el2:', el2);
+        // console.log('will now compare el1:', el1, 'el2:', el2);
 
         if (depth === maxDepth) {
             if (!shallowEqual(el1, el2)) {
-                console.log('depth has reached max depth, and shallowEqual is false', 'el1:', el1, 'el2:', el2);
+                // console.log('depth has reached max depth, and shallowEqual is false', 'el1:', el1, 'el2:', el2);
                 return false;
             }
         } else {
             if (Array.isArray(el1) && Array.isArray(el2)) {
                 if (!shallowify(el1, el2, nextEls1, nextEls2)) {
-                    console.log('shallowify arr reutnred false');
+                    // console.log('shallowify arr reutnred false');
                     return false;
                 }
             } else if (isObject(el1) && isObject(el2)) {
                 const kels1 = flattenDepth1(Object.entries(el1).sort(sortEntriesByKey));
                 const kels2 = flattenDepth1(Object.entries(el2).sort(sortEntriesByKey));
-                console.log('kels1:', kels1, 'kels2:', kels2);
+                // console.log('kels1:', kels1, 'kels2:', kels2);
                 if (!shallowify(kels1, kels2, nextEls1, nextEls2)) {
-                    console.log('shallowify obj reutnred false');
+                    // console.log('shallowify obj reutnred false');
                     return false;
                 }
             } else {
                 if (!shallowEqual(el1, el2)) {
-                    console.log('el1 !== el2', el1, el2);
+                    // console.log('el1 !== el2', el1, el2);
                     return false;
                 }
             }
@@ -46,11 +46,11 @@ export function shallowEqualDepth(arrobj1, arrobj2, maxDepth=0) {
 
         if (!els1.length || !els2.length) {
             if (depth === maxDepth) {
-                console.log('return true as max depth done');
+                // console.log('return true as max depth done');
                 return true;
             } else {
                 depth++;
-                console.log('increasing depth, pushing in', 'nextEls1:', nextEls1, 'nextEls2:', nextEls2);
+                // console.log('increasing depth, pushing in', 'nextEls1:', nextEls1, 'nextEls2:', nextEls2);
                 els1.push(...nextEls1);
                 els2.push(...nextEls2);
                 nextEls1.length = 0;
@@ -59,7 +59,7 @@ export function shallowEqualDepth(arrobj1, arrobj2, maxDepth=0) {
         }
     }
 
-    console.log('out of while so return');
+    // console.log('out of while so return');
     return true;
 }
 
@@ -77,9 +77,9 @@ function shallowify(arr1, arr2, next1, next2) {
             next1.push(subel1);
             next2.push(subel2);
         } else {
-            console.log('comparing', 'subel1:', subel1, 'subel2:', subel2);
+            // console.log('comparing', 'subel1:', subel1, 'subel2:', subel2);
             if (!shallowEqual(subel1, subel2)) return false;
-            console.log('ok same');
+            // console.log('ok same');
         }
     }
     return true;
