@@ -1,4 +1,5 @@
 import shallowEqual from 'recompose/shallowEqual'
+import { isObject } from '../all'
 
 export function shallowEqualDepth(arrobj1, arrobj2, maxDepth=0) {
     // maxDepth is 0 based, so maxDepth of 2 checks 3 levels
