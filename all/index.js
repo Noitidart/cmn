@@ -349,7 +349,7 @@ function editDistance(s1, s2) {
   return costs[s2.length];
 }
 
-function urlencode (str) {
+export function urlencode (str) {
   //       discuss at: http://locutus.io/php/urlencode/
   //      original by: Philip Peterson
   //      improved by: Kevin van Zonneveld (http://kvz.io)
