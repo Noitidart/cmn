@@ -146,6 +146,14 @@ export function escapeRegex(text) {
 	// return text.replace(arguments.callee.sRE, '\\$1');
 }
 
+
+
+function randBetween(min, max) {
+    // short for randomizeBetween
+    // TODO: add precission option, right now default is 0 so just integer
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 /**
  * Selects the closest matching locale from a list of locales.
  *
