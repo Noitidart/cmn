@@ -6,6 +6,20 @@ export function alphaSort(a, b) {
     return a.localeCompare(b);
 }
 
+arrayToObject.extractId = el => el.id
+arrayToObject.extractValue = el => el
+export function arrayToObject(arr, keyExtractor) {
+    // turns elements into keys in object
+    if (keyExtractor === 'VALUE') keyExtractor = arrayToObject.extractValue;
+    else if (keyExtractor === 'ID') keyExtractor = arrayToObject.extractId;
+
+    return arr.reduce((acc, el, ix) => {
+        const key = keyExtractor(el, ix);
+        acc[key] = el;
+        return acc;
+    }, {});
+}
+
 export function compareInt(a, b) {
     // sort asc by integer
     return a - b; // sort asc

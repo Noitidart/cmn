@@ -1,6 +1,7 @@
 import shallowEqual from 'recompose/shallowEqual'
 import { isObject } from '../all'
 
+//////
 export function shallowEqualDepth(arrobj1, arrobj2, maxDepth=0) {
     // maxDepth is 0 based, so maxDepth of 2 checks 3 levels
     const els1 = [arrobj1];
@@ -94,6 +95,31 @@ function sortEntriesByKey([a], [b]) {
 function flattenDepth1(arr) {
     // flattens 1 level deep, like a Object.entries
     return Array.prototype.concat(...arr);
+}
+
+///////
+// depth0Or1Equal({a:[]}, {a:[]}) === false
+// depth0Or1Equal({a:[]}, {a:[]}, {a:1}) === true
+export depth0Or1Equal(obj1, obj2, depth1Keys={}) {
+    // depth1Keys is objecect of keys you want to test at depth of 1, by default test depth of 0
+    const keys1 = Object.keys(obj1);
+    const keys2 = Object.keys(obj2);
+    if (keys1.length !== keys2.length) return false;
+
+    for (const key of keys1) {
+        if (!(key in obj2)) return false;
+
+        const val1 = obj1[key];
+        const val2 = obj2[key];
+        if (key in depth1Keys) {
+            if (!shallowEqual(val1, val2)) return false;
+        } else {
+            if (val1 !== val2) return false;
+        }
+    }
+
+    return true;
+
 }
 
 export { shallowEqual }
