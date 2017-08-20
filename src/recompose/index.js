@@ -100,7 +100,7 @@ function flattenDepth1(arr) {
 ///////
 // depth0Or1Equal({a:[]}, {a:[]}) === false
 // depth0Or1Equal({a:[]}, {a:[]}, {a:1}) === true
-export depth0Or1Equal(obj1, obj2, depth1Keys={}) {
+export function depth0Or1Equal(obj1, obj2, depth1Keys={}) {
     // depth1Keys is objecect of keys you want to test at depth of 1, by default test depth of 0
     const keys1 = Object.keys(obj1);
     const keys2 = Object.keys(obj2);
