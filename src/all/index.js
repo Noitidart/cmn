@@ -148,7 +148,7 @@ export function escapeRegex(text) {
 
 
 
-function randBetween(min, max) {
+export function randBetween(min, max) {
     // short for randomizeBetween
     // TODO: add precission option, right now default is 0 so just integer
     return Math.floor(Math.random() * (max - min + 1)) + min;
