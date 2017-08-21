@@ -146,14 +146,6 @@ export function escapeRegex(text) {
 	// return text.replace(arguments.callee.sRE, '\\$1');
 }
 
-
-
-export function randBetween(min, max) {
-    // short for randomizeBetween
-    // TODO: add precission option, right now default is 0 so just integer
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 /**
  * Selects the closest matching locale from a list of locales.
  *
@@ -212,6 +204,16 @@ export function findClosestLocale(aLocales, aMatchLocales) {
   return null;
 }
 
+export function genNonce(length) {
+	// generates a nonce
+    let nonce = '';
+    const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    for(let i = 0; i < length; i++) {
+        nonce += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return nonce;
+}
+
 export function isObject(avar) {
     // cosntructor.name tested for `function Animal(){}; var a = new Animal(); isObject(a);` will return true otherwise as it is [Object object]
     return Object.prototype.toString.call(avar) === '[object Object]' && avar.constructor.name === 'Object';
@@ -234,6 +236,35 @@ export function mapTruthy(target, mapper) {
         if (el) acc.push(mapper(el, ix, acc))
         return acc;
     }, []);
+}
+
+// https://stackoverflow.com/q/25553910/1828637
+export function pick(obj, ...keys) {
+    const picked = {};
+    fort (const key of keys) {
+        picked[key] = obj[key];
+    }
+}
+
+export function pushAlternating(aTargetArr, aEntry) {
+    // mutates aTargetArr
+	// pushes into an array aEntry, every alternating
+		// so if aEntry 0
+			// [1, 2] becomes [1, 0, 2]
+			// [1] statys [1]
+			// [1, 2, 3] becomes [1, 0, 2, 0, 3]
+	let l = aTargetArr.length;
+	for (let i=l-1; i>0; i--) {
+		aTargetArr.splice(i, 0, aEntry);
+	}
+
+	return aTargetArr;
+}
+
+export function randBetween(min, max) {
+    // short for randomizeBetween
+    // TODO: add precission option, right now default is 0 so just integer
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 export async function retry(callback, {cnt, sec, interval=1000}={}) {
@@ -274,6 +305,12 @@ export async function retry(callback, {cnt, sec, interval=1000}={}) {
     }
 }
 
+// https://stackoverflow.com/a/1499916/1828637
+export function stripTags(html) {
+    // html is text
+    return html.replace(/(<([^>]+)>)/ig, '');
+}
+
 export function sum(arr) {
     return arr.reduce((sum, x) => sum + x);
 }
@@ -293,119 +330,126 @@ export function toTitleCase(str) {
     return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 }
 
+export function urldecode (str) {
+    //       discuss at: http://locutus.io/php/urldecode/
+    //      original by: Philip Peterson
+    //      improved by: Kevin van Zonneveld (http://kvz.io)
+    //      improved by: Kevin van Zonneveld (http://kvz.io)
+    //      improved by: Brett Zamir (http://brett-zamir.me)
+    //      improved by: Lars Fischer
+    //      improved by: Orlando
+    //      improved by: Brett Zamir (http://brett-zamir.me)
+    //      improved by: Brett Zamir (http://brett-zamir.me)
+    //         input by: AJ
+    //         input by: travc
+    //         input by: Brett Zamir (http://brett-zamir.me)
+    //         input by: Ratheous
+    //         input by: e-mike
+    //         input by: lovio
+    //      bugfixed by: Kevin van Zonneveld (http://kvz.io)
+    //      bugfixed by: Rob
+    // reimplemented by: Brett Zamir (http://brett-zamir.me)
+    //           note 1: info on what encoding functions to use from:
+    //           note 1: http://xkr.us/articles/javascript/encode-compare/
+    //           note 1: Please be aware that this function expects to decode
+    //           note 1: from UTF-8 encoded strings, as found on
+    //           note 1: pages served as UTF-8
+    //        example 1: urldecode('Kevin+van+Zonneveld%21')
+    //        returns 1: 'Kevin van Zonneveld!'
+    //        example 2: urldecode('http%3A%2F%2Fkvz.io%2F')
+    //        returns 2: 'http://kvz.io/'
+    //        example 3: urldecode('http%3A%2F%2Fwww.google.nl%2Fsearch%3Fq%3DLocutus%26ie%3Dutf-8%26oe%3Dutf-8%26aq%3Dt%26rls%3Dcom.ubuntu%3Aen-US%3Aunofficial%26client%3Dfirefox-a')
+    //        returns 3: 'http://www.google.nl/search?q=Locutus&ie=utf-8&oe=utf-8&aq=t&rls=com.ubuntu:en-US:unofficial&client=firefox-a'
+    //        example 4: urldecode('%E5%A5%BD%3_4')
+    //        returns 4: '\u597d%3_4'
+    return decodeURIComponent((str + '')
+      .replace(/%(?![\da-f]{2})/gi, function () {
+        // PHP tolerates poorly formed escape sequences
+        return '%25'
+      })
+      .replace(/\+/g, '%20'))
+  }
+
+export function urlencode (str) {
+    //       discuss at: http://locutus.io/php/urlencode/
+    //      original by: Philip Peterson
+    //      improved by: Kevin van Zonneveld (http://kvz.io)
+    //      improved by: Kevin van Zonneveld (http://kvz.io)
+    //      improved by: Brett Zamir (http://brett-zamir.me)
+    //      improved by: Lars Fischer
+    //         input by: AJ
+    //         input by: travc
+    //         input by: Brett Zamir (http://brett-zamir.me)
+    //         input by: Ratheous
+    //      bugfixed by: Kevin van Zonneveld (http://kvz.io)
+    //      bugfixed by: Kevin van Zonneveld (http://kvz.io)
+    //      bugfixed by: Joris
+    // reimplemented by: Brett Zamir (http://brett-zamir.me)
+    // reimplemented by: Brett Zamir (http://brett-zamir.me)
+    //           note 1: This reflects PHP 5.3/6.0+ behavior
+    //           note 1: Please be aware that this function
+    //           note 1: expects to encode into UTF-8 encoded strings, as found on
+    //           note 1: pages served as UTF-8
+    //        example 1: urlencode('Kevin van Zonneveld!')
+    //        returns 1: 'Kevin+van+Zonneveld%21'
+    //        example 2: urlencode('http://kvz.io/')
+    //        returns 2: 'http%3A%2F%2Fkvz.io%2F'
+    //        example 3: urlencode('http://www.google.nl/search?q=Locutus&ie=utf-8')
+    //        returns 3: 'http%3A%2F%2Fwww.google.nl%2Fsearch%3Fq%3DLocutus%26ie%3Dutf-8'
+    str = (str + '')
+    // Tilde should be allowed unescaped in future versions of PHP (as reflected below),
+    // but if you want to reflect current
+    // PHP behavior, you would need to add ".replace(/~/g, '%7E');" to the following.
+    return encodeURIComponent(str)
+      .replace(/!/g, '%21')
+      .replace(/'/g, '%27')
+      .replace(/\(/g, '%28')
+      .replace(/\)/g, '%29')
+      .replace(/\*/g, '%2A')
+      .replace(/%20/g, '+')
+  }
+
 export async function wait(ms) {
     await new Promise(resolve => setTimeout(()=>resolve(), ms));
 }
 
-export function pushAlternating(aTargetArr, aEntry) {
-	// pushes into an array aEntry, every alternating
-		// so if aEntry 0
-			// [1, 2] becomes [1, 0, 2]
-			// [1] statys [1]
-			// [1, 2, 3] becomes [1, 0, 2, 0, 3]
-	let l = aTargetArr.length;
-	for (let i=l-1; i>0; i--) {
-		aTargetArr.splice(i, 0, aEntry);
-	}
-
-	return aTargetArr;
-}
-
-export function genNonce(length) {
-	// generates a nonce
-    let nonce = '';
-    const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    for(let i = 0; i < length; i++) {
-        nonce += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
-    return nonce;
-}
-
-
-
-
-// https://stackoverflow.com/a/1499916/1828637
-export function stripTags(html) {
-    // html is text
-    return html.replace(/(<([^>]+)>)/ig, '');
-}
-
 // https://stackoverflow.com/a/36566052/1828637
 export function wordSimilarity(s1, s2) {
-  var longer = s1;
-  var shorter = s2;
-  if (s1.length < s2.length) {
-    longer = s2;
-    shorter = s1;
+    var longer = s1;
+    var shorter = s2;
+    if (s1.length < s2.length) {
+      longer = s2;
+      shorter = s1;
+    }
+    var longerLength = longer.length;
+    if (longerLength == 0) {
+      return 1.0;
+    }
+    return (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength);
   }
-  var longerLength = longer.length;
-  if (longerLength == 0) {
-    return 1.0;
-  }
-  return (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength);
-}
-function editDistance(s1, s2) {
-  s1 = s1.toLowerCase();
-  s2 = s2.toLowerCase();
+  function editDistance(s1, s2) {
+    s1 = s1.toLowerCase();
+    s2 = s2.toLowerCase();
 
-  var costs = new Array();
-  for (var i = 0; i <= s1.length; i++) {
-    var lastValue = i;
-    for (var j = 0; j <= s2.length; j++) {
-      if (i == 0)
-        costs[j] = j;
-      else {
-        if (j > 0) {
-          var newValue = costs[j - 1];
-          if (s1.charAt(i - 1) != s2.charAt(j - 1))
-            newValue = Math.min(Math.min(newValue, lastValue),
-              costs[j]) + 1;
-          costs[j - 1] = lastValue;
-          lastValue = newValue;
+    var costs = new Array();
+    for (var i = 0; i <= s1.length; i++) {
+      var lastValue = i;
+      for (var j = 0; j <= s2.length; j++) {
+        if (i == 0)
+          costs[j] = j;
+        else {
+          if (j > 0) {
+            var newValue = costs[j - 1];
+            if (s1.charAt(i - 1) != s2.charAt(j - 1))
+              newValue = Math.min(Math.min(newValue, lastValue),
+                costs[j]) + 1;
+            costs[j - 1] = lastValue;
+            lastValue = newValue;
+          }
         }
       }
+      if (i > 0)
+        costs[s2.length] = lastValue;
     }
-    if (i > 0)
-      costs[s2.length] = lastValue;
+    return costs[s2.length];
   }
-  return costs[s2.length];
-}
-
-export function urlencode (str) {
-  //       discuss at: http://locutus.io/php/urlencode/
-  //      original by: Philip Peterson
-  //      improved by: Kevin van Zonneveld (http://kvz.io)
-  //      improved by: Kevin van Zonneveld (http://kvz.io)
-  //      improved by: Brett Zamir (http://brett-zamir.me)
-  //      improved by: Lars Fischer
-  //         input by: AJ
-  //         input by: travc
-  //         input by: Brett Zamir (http://brett-zamir.me)
-  //         input by: Ratheous
-  //      bugfixed by: Kevin van Zonneveld (http://kvz.io)
-  //      bugfixed by: Kevin van Zonneveld (http://kvz.io)
-  //      bugfixed by: Joris
-  // reimplemented by: Brett Zamir (http://brett-zamir.me)
-  // reimplemented by: Brett Zamir (http://brett-zamir.me)
-  //           note 1: This reflects PHP 5.3/6.0+ behavior
-  //           note 1: Please be aware that this function
-  //           note 1: expects to encode into UTF-8 encoded strings, as found on
-  //           note 1: pages served as UTF-8
-  //        example 1: urlencode('Kevin van Zonneveld!')
-  //        returns 1: 'Kevin+van+Zonneveld%21'
-  //        example 2: urlencode('http://kvz.io/')
-  //        returns 2: 'http%3A%2F%2Fkvz.io%2F'
-  //        example 3: urlencode('http://www.google.nl/search?q=Locutus&ie=utf-8')
-  //        returns 3: 'http%3A%2F%2Fwww.google.nl%2Fsearch%3Fq%3DLocutus%26ie%3Dutf-8'
-  str = (str + '')
-  // Tilde should be allowed unescaped in future versions of PHP (as reflected below),
-  // but if you want to reflect current
-  // PHP behavior, you would need to add ".replace(/~/g, '%7E');" to the following.
-  return encodeURIComponent(str)
-    .replace(/!/g, '%21')
-    .replace(/'/g, '%27')
-    .replace(/\(/g, '%28')
-    .replace(/\)/g, '%29')
-    .replace(/\*/g, '%2A')
-    .replace(/%20/g, '+')
-}
