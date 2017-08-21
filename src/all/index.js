@@ -241,7 +241,7 @@ export function mapTruthy(target, mapper) {
 // https://stackoverflow.com/q/25553910/1828637
 export function pick(obj, ...keys) {
     const picked = {};
-    fort (const key of keys) {
+    for (const key of keys) {
         picked[key] = obj[key];
     }
 }
