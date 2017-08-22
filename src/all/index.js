@@ -6,15 +6,20 @@ export function alphaSort(a, b) {
     return a.localeCompare(b);
 }
 
-arrayToObject.extractId = el => el.id
-arrayToObject.extractValue = el => el
-export function arrayToObject(arr, keyExtractor) {
-    // turns elements into keys in object
-    if (keyExtractor === 'VALUE') keyExtractor = arrayToObject.extractValue;
-    else if (keyExtractor === 'ID') keyExtractor = arrayToObject.extractId;
 
+arrayToObject.getKey = (el, extractor) => {
+    if (!extractor) return el;
+    else if (typeof extractor === 'string') return el[extractor]; // assumes is an object
+    else return extractor(el); // assumes extractor is a function
+}
+export function arrayToObject(arr, keyExtractor) {
+    // keyExtractor can be:
+        // undefined/falsy to just return array element
+        // string - extract one level deep from object
+        // function - function that gets args of (arrayElement, index), must return string
+    // turns elements into keys in object
     return arr.reduce((acc, el, ix) => {
-        const key = keyExtractor(el, ix);
+        const key = arrayToObject.getKey(el, keyExtractor);
         acc[key] = el;
         return acc;
     }, {});
