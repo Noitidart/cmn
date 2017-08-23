@@ -76,7 +76,7 @@ export function calcSalt({
 	// return kSaltString + '.' + aName;
 }
 
-export function deepAccessUsingString(obj, dotpath, defaultval){
+export function deepAccessUsingString(obj, dotpath, defaultval) {
     // defaultval is returned when it is not found, by default, defaultval is undefined, set it to "THROW" if you want it to throw
 
     // super simple version:
@@ -248,6 +248,15 @@ export function pick(obj, ...keys) {
     const picked = {};
     for (const key of keys) {
         picked[key] = obj[key];
+    }
+}
+
+export function pickDotpath(obj, ...dotpaths) {
+    const picked = {};
+    for (const dotpath of dotpaths) {
+        const keys = dotpath.split('.');
+        if (keys.length > 1) picked[keys[keys.length-1]] = deepAccessUsingString(obj, dotpath);
+        else picked[dotpath] = obj[dotpath];
     }
 }
 
