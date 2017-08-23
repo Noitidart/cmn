@@ -258,7 +258,7 @@ export function pickDotpath(obj, ...dotpaths) {
         let asKey;
         const asIx = dotpath.indexOf(' as ');
         if (asIx > -1) {
-            asKey = dotpath.substr(asIx + 5);
+            asKey = dotpath.substr(asIx + 4);
             dotpath = dotpath.substr(0, asIx);
         }
         const keys = dotpath.split('.');
@@ -266,6 +266,8 @@ export function pickDotpath(obj, ...dotpaths) {
         if (keys.length > 1) picked[asKey] = deepAccessUsingString(obj, dotpath);
         else picked[asKey] = obj[dotpath];
     }
+
+    return picked;
 }
 
 export function pushAlternating(aTargetArr, aEntry) {
