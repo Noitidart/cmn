@@ -252,11 +252,19 @@ export function pick(obj, ...keys) {
 }
 
 export function pickDotpath(obj, ...dotpaths) {
+    // can do dotpath + ' as BLAH'
     const picked = {};
-    for (const dotpath of dotpaths) {
+    for (let dotpath of dotpaths) {
+        let asKey;
+        const asIx = dotpath.indexOf(' as ');
+        if (asIx > -1) {
+            asKey = dotpath.substr(asIx + 5);
+            dotpath = dotpath.substr(0, asIx);
+        }
         const keys = dotpath.split('.');
-        if (keys.length > 1) picked[keys[keys.length-1]] = deepAccessUsingString(obj, dotpath);
-        else picked[dotpath] = obj[dotpath];
+        if (!asKey) asKey = keys[keys.length -1];
+        if (keys.length > 1) picked[asKey] = deepAccessUsingString(obj, dotpath);
+        else picked[asKey] = obj[dotpath];
     }
 }
 
