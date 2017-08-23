@@ -249,6 +249,7 @@ export function pick(obj, ...keys) {
     for (const key of keys) {
         picked[key] = obj[key];
     }
+    return picked;
 }
 
 export function pickDotpath(obj, ...dotpaths) {
