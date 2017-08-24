@@ -1,6 +1,6 @@
 {
   "name": "cmn",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "My common javascript functions",
   "main": "lib/index.js",
   "scripts": {
