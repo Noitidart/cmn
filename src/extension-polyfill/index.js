@@ -1,4 +1,4 @@
-import { deepAccessUsingString } from './all'
+import { deepAccessUsingString } from '../all'
 const TRUNK = typeof chrome !== 'undefined' && chrome.runtime ? chrome : browser;
 // does not work in content script - window.chrome is undefined apparently in firefox - // const TRUNK = window.chrome && window.chrome.runtime ? window.chrome : window.browser;
 // const TRUNK_NAME = window.chrome ? 'chrome' : 'browser'; // unused
