@@ -1,125 +1,95 @@
-// TODO: figure out how to make redux-offline only persist some keys, like there is no reason to persist messages
-import React from 'react'
+// TODO: is this todo on the right comment still valid? 082117 // TODO: figure out how to make redux-offline only persist some keys, like there is no reason to persist messages
 import { combineReducers, createStore } from 'redux'
-import { render, unmountComponentAtNode } from 'react-dom'
-import { shallowEqual } from 'cmn/recompose' // eslint-disable-line no-unused-vars
-import { deepAccessUsingString } from 'cmn/all'
-// import { applyMiddleware, combineReducers, compose, createStore } from 'redux'
-// import { offline } from 'redux-offline'
-// import offlineConfigDefault from 'redux-offline/lib/defaults'
-// import thunk from 'redux-thunk'
+import { pick, arrayToObject } from 'cmn/lib/all'
+import {  depth0Or1Equal } from 'cmn/lib/recompose'
 
 
-import elements from './elements'
-import { removeElement, addElement } from './elements'
-
-import Proxy from './Proxy'
-
-function renderProxiedElement(callInReduxScope, server_name, component, container, wanted) {
-    // this should imported and executed in the dom where we want to render the html element
-    // if ReduxServer is in same scope, set callInReduxPath to gReduxServer
-    // resolves with elementid - so dever can use with dispatch(removeElement(id)) --- actually i changed it, it resolves with a helper function which internally does dispatch(removeElement(id)), see link7884721
-    // component - react class
-    // container - dom target - document.getElementById('root')
-    // wanted - wanted state
-    // store.dispatch(addElement('todo', component.name, wanted));    if (Array.isArray(callInReduxPath)) {
-
-    const callInRedux = (method, ...args) => callInReduxScope(server_name + '.' + method, ...args);
-
-    let resolveAfterMount; // resolves with unmount function
-    const promise = new Promise(resolve => {
-        resolveAfterMount = val => resolve(val)
-    });
-
-    let id; // element id
-    let setState;
-
-    const dispatch = function(action) {
-        // TODO: NOTE: if there are keys which have data that can be transferred, it should be be in __XFER key in the object returned by the action declared in the files in ./flows/* ---- i might have to do a test in Comm sendMessage to test if the data in key marked for possible transferrable, is actually transferrable MAYBE im not sure, the browser might handle it, but if data is duplicated i should do the check
-        callInRedux('dispatch', action);
-    };
-
-    // const unmountProxiedElement = function(dontUnmount, dontDispatch) {
-    //     console.log('DOING unmountProxiedElement');
-    //     if (!dontDispatch) dispatch(removeElement(id, dontUnmount));
-    // };
-
-    const progressor = function(aArg) {
-        const { __PROGRESS } = aArg;
-
-        if (__PROGRESS) {
-            const { state } = aArg;
-            if (id === undefined) {
-                id = aArg.id;
-                const setSetState = aSetState => {
-                    setState = aSetState;
-                    setState(() => state);
-                };
-                render(<Proxy Component={component} id={id} setSetState={setSetState} dispatch={dispatch} />, container);
-                resolveAfterMount(dontUnmount => dispatch(removeElement(id, dontUnmount))); // link7884721
-            } else {
-                setState(() => state);
-            }
-        } else {
-            // unmounted - server was shutdown by unregister()
-            console.log('ok unmounting in dom, aArg:', aArg);
-            if (!aArg || !aArg.dontUnmount) unmountComponentAtNode(container);
-        }
-    };
-
-    callInRedux('addElement', { wanted }, progressor);
-
-    // window is defintiely available, as renderProxiedElement is only used in DOM
-    window.addEventListener('unload', ()=>dispatch(removeElement(id, true)), false);
-
-    return promise;
-}
+import { addElement } from './elements'
 
 class Server {
     // store = undefined
     // serverElement
+    // stateOld = undefined
     nextelementid = 0
     removeElement = {} // holds promises, to trigger to remove element
-    constructor(reducers, serverElement) {
-
-        // this.store = createStore(reducer, undefined, compose(applyMiddleware(thunk), offline(offlineConfigDefault)));
-        // this.store = createStore(combineReducers(reducers), undefined, compose(applyMiddleware(thunk), offline(offlineConfigDefault)));
-        // this.store = createStore(combineReducers(reducers), undefined, applyMiddleware(thunk));
-        this.store = createStore(combineReducers({ ...reducers, elements }));
-
-        this.store.subscribe(this.render);
+    constructor(store, serverElement) {
+        // server side wantedState
+        store.subscribe(this.render);
+        this.store = store;
         this.serverElement = serverElement;
+        this.serverElementDidNotMount = true;
         this.render();
     }
     render = () => {
-        console.log('IN SERVER RENDER');
+        // console.log('IN SERVER RENDER');
         const state = this.store.getState();
-        const { elements } = state;
+        const { stateOld={} } = this;
+        this.stateOld = state;
 
-        // check if any element was removed, if so then trigger this.removeElement which will resolve its hanging promise
-        for (const id of Object.keys(this.removeElement)) {
-            if (!(id in elements)) {
-                this.removeElement(id);
+        const { elements } = state;
+        const { elements:elementsOld } = stateOld;
+
+        const changed = {};
+        for (const key of Object.keys(state)) {
+            console.log(`comparing if "${key}" changed in state, now:`, state[key], 'old:', stateOld[key]);
+            // if (!shallowEqualDepth(state[key], stateOld[key])) changed[key] = true;
+            if (!depth0Or1Equal(state[key], stateOld[key])) changed[key] = true; // as in server side, i can do reference checking, as i am careful in the reducers to return the same state if no change is needed
+            // console.log(key in changed ? 'yes it changed!' : 'no it didnt change', 'state:', state[key], 'stateOld:', stateOld[key]);
+        }
+
+        if (didWantedChange(['elements'], changed)) {
+            const elementIds = arrayToObject(elements, 'id');
+            console.log('removeElement:', this.removeElement, 'ids:', elementIds);
+            for (const id of Object.keys(this.removeElement)) {
+                if (!elementIds[id]) {
+                    // this id was removed, so lets trigger the this.removeElement[id] of it
+                    console.log('id:', id, 'this id was removed, so lets trigger the this.removeElement[id] of it');
+                    // TODO: because removeElement is not set until promise returns, AND if remove is called before that promise returns (which i dont think would ever happen BUT still it might depending on if a proxiedMount proxiedUnmount was called, i dont know if its setup for this right now but its possible due to async tick nature).... its a promise, i should do a retry until removeElement comes into existance. the promsie is seen at link8917472
+                    this.removeElement[id]();
+                }
+            }
+            console.log('done iter');
+        }
+
+        for (const { id, wanted, setState } of elements) {
+
+            const justAdded = !elementsOld.find( element => element.id === id );
+            if (justAdded) {
+                // do setState, this is needed for triggering the mount
+                const wantedState = buildWantedState(wanted, state) || {}; // the || {} is only for when justAdded/serverElement just mounting
+                setState(wantedState);
+            } else if (didWantedChange(wanted, changed)) {
+                const wantedState = buildWantedState(wanted, state);
+                if (wantedState) setState(wantedState);
             }
         }
 
-        // TODO: shallowEqual here to figure out if i should update anything
-        for (const { /*id,*/ wanted, setState } of elements) {
-            setState(buildWantedState(wanted, state));
+        {
+            const wanted = this.serverElement.wantedState;
+            // console.log('serverElement.wanted:', wanted);
+            if (this.serverElementDidNotMount) {
+                delete this.serverElementDidNotMount;
+                const wantedState = buildWantedState(wanted, state) || {}; // the || {} is only for when justAdded/serverElement just mounting
+                this.serverElement(wantedState, stateOld, this.store.dispatch); // equilavent of serverElement.setState(state)
+            } else if (didWantedChange(wanted, changed)) {
+                // console.log('will get wantedState and render background element maybe');
+                const wantedState = buildWantedState(wanted, state);
+                if (wantedState) this.serverElement(wantedState, stateOld, this.store.dispatch); // equilavent of serverElement.setState(state)
+            }
+            // else { console.log('will not render background element as no change'); }
         }
-        this.serverElement(state, this.store.dispatch); // equilavent of serverElement.setState(state)
     }
     addElement = (aArg, aReportProgress/*, ...args*/) => {
         // console.log('in addElement, aArg:', aArg, 'aReportProgress:', aReportProgress, 'args:', args);
-        console.log('in addElement, aArg:', aArg);
+        // console.log('in addElement, aArg:', aArg);
         const id = (this.nextelementid++).toString(); // toString because it is used as a key in react - crossfile-link3138470
         return new Promise( resolve => { // i need to return promise, because if it is Comm, a promise will keep it alive so it keeps responding to aReportProgress
             const { wanted } = aArg;
-            const setState = state => aReportProgress({ id, state });
+            const setState = wantedState => aReportProgress({ id, wantedState }); // wantedState is object of keys of `wanted` with their values from app state container TODO: probably dont send id everytime, probably just on first one - extremely slight perf enhance
             this.store.dispatch(addElement(id, wanted, setState));
 
             // this.removeElement[id] is only to be called by render as a result of dispatch(removeElement)
-            this.removeElement[id] = () => {
+            this.removeElement[id] = () => { // link8917472 - see this thing is inside of a promise
                 delete this.removeElement[id];
                 resolve({ destroyed:true });
             };
@@ -131,24 +101,31 @@ class Server {
     }
 }
 
-const DOTPATH_AS_PATT = /(.+) as (.+)$/m;
-function buildWantedState(wanted, state) {
-    console.log('state:', state, 'wanted:', wanted);
-    let wanted_state = {};
-    for (let dotpath of wanted) {
-        let name;
-        if (DOTPATH_AS_PATT.test(dotpath)) {
-            // ([, dotpath, name] = DOTPATH_AS_PATT.exec(dotpath));
-            let matches = DOTPATH_AS_PATT.exec(dotpath);
-            dotpath = matches[1];
-            name = matches[2];
-        } else {
-            name = dotpath.split('.');
-            name = name[name.length-1];
+function didWantedChange(wanted, changeds) {
+    if (!wanted) return false;
+    for (const key of wanted) {
+        if (key in changeds) {
+            return true;
         }
-        wanted_state[name] = deepAccessUsingString(state, dotpath, 'THROW');
     }
-    return wanted_state;
+    return false;
 }
 
-export { Server, renderProxiedElement }
+function buildWantedState(wanted, state) {
+    // goes through keys of wanted, makes sure it is a key in state, if it is then it picks it
+    // console.log('wanted:', wanted);
+    // console.log('state:', state, 'wanted:', wanted);
+    const wantedState = {};
+    if (!wanted) return null;
+    let somethingWanted = false;
+    for (const key of wanted) {
+        if (key in state) {
+            somethingWanted = true;
+            wantedState[key] = state[key];
+        }
+    }
+    if (!somethingWanted) return null;
+    return wantedState;
+}
+
+export default Server
