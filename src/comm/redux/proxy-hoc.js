@@ -14,7 +14,7 @@ function proxyHOCFactory(callInReduxScope, serverName, wanted) {
                 static displayName = wrapDisplayName(WrappedComponent, 'ProxyConnect')
                 state = {
                     id: undefined,
-                    wanted: wanted.reduce( (acc, el) => acc[el] = undefined, {} )
+                    wantedState: wanted.reduce( (acc, el) => { acc[el] = undefined; return acc; }, {} )
                 }
                 constructor() {
                     super();
