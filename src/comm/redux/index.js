@@ -31,7 +31,7 @@ class Server {
 
         const changed = {};
         for (const key of Object.keys(state)) {
-            console.log(`comparing if "${key}" changed in state, now:`, state[key], 'old:', stateOld[key]);
+            // console.log(`comparing if "${key}" changed in state, now:`, state[key], 'old:', stateOld[key]);
             // if (!shallowEqualDepth(state[key], stateOld[key])) changed[key] = true;
             if (!depth0Or1Equal(state[key], stateOld[key])) changed[key] = true; // as in server side, i can do reference checking, as i am careful in the reducers to return the same state if no change is needed
             // console.log(key in changed ? 'yes it changed!' : 'no it didnt change', 'state:', state[key], 'stateOld:', stateOld[key]);

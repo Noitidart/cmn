@@ -248,6 +248,7 @@ export function omit(obj, ...keys) {
     for (const key of keys) {
         delete obj[key];
     }
+    return obj;
 }
 // https://stackoverflow.com/q/25553910/1828637
 export function pick(obj, ...keys) {
