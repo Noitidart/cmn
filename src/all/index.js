@@ -243,6 +243,12 @@ export function mapTruthy(target, mapper) {
     }, []);
 }
 
+export function omit(obj, ...keys) {
+    // mutates - deletes keys in obj
+    for (const key of keys) {
+        delete obj[key];
+    }
+}
 // https://stackoverflow.com/q/25553910/1828637
 export function pick(obj, ...keys) {
     const picked = {};
