@@ -3,6 +3,7 @@ import wrapDisplayName from 'recompose/wrapDisplayName'
 
 import { removeElement } from './elements'
 
+// if wanted is undefiend - then it doesnt proxy, it just gives it prop of `dispatchProxied`
 function proxyHOCFactory(callInReduxScope, serverName, wanted) {
 
     const callInRedux = (method, ...args) => callInReduxScope(serverName + '.' + method, ...args);
@@ -14,17 +15,17 @@ function proxyHOCFactory(callInReduxScope, serverName, wanted) {
                 static displayName = wrapDisplayName(WrappedComponent, 'ProxyConnect')
                 state = {
                     id: undefined,
-                    wantedState: wanted.reduce( (acc, el) => { acc[el] = undefined; return acc; }, {} )
+                    wantedState: wanted && wanted.reduce( (acc, el) => { acc[el] = undefined; return acc; }, {} )
                 }
                 constructor() {
                     super();
-                    this.proxy();
+                    if (wanted) this.proxy();
                 }
                 componentWillUnmount() {
-                    this.unproxy();
+                    if (wanted) this.unproxy();
                 }
                 render () {
-                    const { id, ...wantedState } = this.state;
+                    const { id, wantedState } = this.state;
 
                     // test if id is undefined because on mount, state has not yet been received, so dont render
                     return id === undefined ? null : <WrappedComponent {...this.props} dispatchProxied={dispatchProxied} {...wantedState} />;
