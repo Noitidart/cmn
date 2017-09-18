@@ -15,7 +15,7 @@ function proxyHOCFactory(callInReduxScope, serverName, wanted) {
                 static displayName = wrapDisplayName(WrappedComponent, 'ProxyConnect')
                 state = {
                     id: undefined,
-                    wantedState: wanted && wanted.reduce( (acc, el) => { acc[el] = undefined; return acc; }, {} )
+                    wantedState: !wanted ? undefined : wanted.reduce( (acc, el) => { acc[el] = undefined; return acc; }, {} )
                 }
                 constructor() {
                     super();
@@ -28,7 +28,12 @@ function proxyHOCFactory(callInReduxScope, serverName, wanted) {
                     const { id, wantedState } = this.state;
 
                     // test if id is undefined because on mount, state has not yet been received, so dont render
-                    return id === undefined ? null : <WrappedComponent {...this.props} dispatchProxied={dispatchProxied} {...wantedState} />;
+                    if (wanted) {
+                        return id === undefined ? null : <WrappedComponent {...this.props} dispatchProxied={dispatchProxied} {...wantedState} />;
+                    } else {
+                        // just give it dispatchProxied
+                        return <WrappedComponent {...this.props} dispatchProxied={dispatchProxied} />;
+                    }
                 }
 
                 proxy = () => {
