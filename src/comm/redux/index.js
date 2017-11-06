@@ -39,16 +39,16 @@ class Server {
 
         if (didWantedChange(['elements'], changed)) {
             const elementIds = arrayToObject(elements, 'id');
-            console.log('removeElement:', this.removeElement, 'ids:', elementIds);
+            // console.log('removeElement:', this.removeElement, 'ids:', elementIds);
             for (const id of Object.keys(this.removeElement)) {
                 if (!elementIds[id]) {
                     // this id was removed, so lets trigger the this.removeElement[id] of it
-                    console.log('id:', id, 'this id was removed, so lets trigger the this.removeElement[id] of it');
+                    // console.log('id:', id, 'this id was removed, so lets trigger the this.removeElement[id] of it');
                     // TODO: because removeElement is not set until promise returns, AND if remove is called before that promise returns (which i dont think would ever happen BUT still it might depending on if a proxiedMount proxiedUnmount was called, i dont know if its setup for this right now but its possible due to async tick nature).... its a promise, i should do a retry until removeElement comes into existance. the promsie is seen at link8917472
                     this.removeElement[id]();
                 }
             }
-            console.log('done iter');
+            // console.log('done iter');
         }
 
         for (const { id, wanted, setState } of elements) {
