@@ -53,7 +53,7 @@ function proxyHOCFactory(callInReduxScope, serverName, wanted) {
                         // console.log('progressor, got wantedState:', wantedState);
                         this.setState( ({ id:idOld }) => idOld === undefined ? { id, wantedState } : { wantedState }); // i dont have setState with id everytime, id is only needed for initial setState
                     }
-                    else { console.log('ok unproxied in dom, aArg:', aArg); } // unproxied - server was shutdown by unregister()
+                    // else { console.log('ok unproxied in dom, aArg:', aArg); } // unproxied - server was shutdown by unregister()
                 }
             }
         )

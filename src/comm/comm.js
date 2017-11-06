@@ -42,7 +42,7 @@ class Base {
         if (this.cantransfer && aTransfers) {
             this.target.postMessage(payload, aTransfers);
         } else {
-            console.log(`Comm.${this.commname} - in doSendMessageMethod, payload:`, payload, 'target:', this.target);
+            // console.log(`Comm.${this.commname} - in doSendMessageMethod, payload:`, payload, 'target:', this.target);
             this.target.postMessage(payload);
         }
     }
@@ -64,7 +64,7 @@ class Base {
     }
     // end related two methods
     unregister() {
-        console.error(`Comm.${this.commname} - in unregister`);
+        // console.error(`Comm.${this.commname} - in unregister`);
         if (this.isunregistered) throw new Error(`Comm.${this.commname} - already unregistered`);
         this.isunregistered = true;
         for (const handler of this.onUnregister.handlers) handler(this.target, this);
@@ -178,7 +178,7 @@ class Base {
                 delete this.receptacle[payload.cbid];
             }
         }
-        else console.error(`Comm.${this.commname} - invalid combination. method:`, payload.method, 'cbid:', payload.cbid, 'payload:', payload);
+        // else console.error(`Comm.${this.commname} - invalid combination. method:`, payload.method, 'cbid:', payload.cbid, 'payload:', payload);
     }
 }
 
