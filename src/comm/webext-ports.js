@@ -82,11 +82,11 @@ export class Server extends Base {
         for (let [portid, port] of Object.entries(this.ports)) {
             if (port === aPort) return portid;
         }
-        console.error('portid for aPort not found!', 'aPort:', aPort, 'this.ports:', this.ports);
+        // console.error('portid for aPort not found!', 'aPort:', aPort, 'this.ports:', this.ports);
         throw new Error('portid for aPort not found!');
     }
     connector = aPort => {
-        console.log(`Comm.${this.commname} - incoming connect request, aPortGroupName:`, aPort.name, 'aPort:', aPort);
+        // console.log(`Comm.${this.commname} - incoming connect request, aPortGroupName:`, aPort.name, 'aPort:', aPort);
         let groupname = aPort.name;
         let portid = groupname + Server.portid_groupname_splitter + this.nextportid++;
         this.ports[portid] = aPort;
@@ -96,7 +96,7 @@ export class Server extends Base {
         if (this.onHandshake) this.onHandshake(aPort);
     }
     disconnector = aPort => {
-        console.log(`Comm.${this.commname} - incoming disconnect request, static aPort:`, aPort, 'portid:', this.getPortId(aPort));
+        // console.log(`Comm.${this.commname} - incoming disconnect request, static aPort:`, aPort, 'portid:', this.getPortId(aPort));
         let portid = this.getPortId(aPort);
         aPort.onMessage.removeListener(this.controller); // probably not needed, as it was disconnected
         delete this.ports[portid];
@@ -154,7 +154,7 @@ export class Client extends Base {
         return this.target;
     }
     disconnector = aPort => {
-        console.log(`Comm.${this.commname} - incoming disconnect request, aPort:`, aPort);
+        // console.log(`Comm.${this.commname} - incoming disconnect request, aPort:`, aPort);
         this.target.onDisconnect.removeListener(this.disconnector);
         if(!this.isunregistered) this.unregister(); // if .disconnector triggered by this.unregister being called first, this second call here on this line will fail as in base unregister can only be called once otherwise it throws
     }
