@@ -1,3 +1,5 @@
+import { get } from 'lodash/get'
+
 export function average(arr) {
     return sum(arr) / arr.length;
 }
@@ -273,6 +275,42 @@ export function pickDotpath(obj, ...dotpaths) {
         if (!asKey) asKey = keys[keys.length -1];
         if (keys.length > 1) picked[asKey] = deepAccessUsingString(obj, dotpath);
         else picked[asKey] = obj[dotpath];
+    }
+
+    return picked;
+}
+
+function pickAsByGet(obj, ...dotpaths) {
+    // can do dotpath + ' as BLAH'
+    // last arg can be an options object
+        // // shouldIgnoreUndefined: boolean // default false - if value is undefined dont pick
+        // dontOverwriteDefined: boolean // if value already picked, and it is !== undefined, should overwrite?
+
+    // example:
+        // pickDotpath({a:{b:[{c:['c','cc','ccc']},'bb']}, rawr:'hi', foo:'bar'}, 'a.b[0].c[3]', 'rawr as c', 'foo as c', { dontOverwriteDefined:true }) gives { c:'hi' }
+
+    let options = dotpaths[dotpaths.length-1];
+    const isLastOptions = isObject(options);
+    if (!isLastOptions) options = {};
+    else dotpaths.pop();
+
+    const picked = {};
+    for (const dotpath of dotpaths) {
+        console.log('dotpath:', dotpath);
+        const ixAs = dotpath.indexOf(' as ');
+        const hasAs = ixAs > -1;
+
+        const path = hasAs ? dotpath.substr(0, ixAs) : dotpath;
+        let asValue = hasAs ? dotpath.substr(ixAs + 4) : path;
+        if (asValue.includes('.')) asValue = asValue.substr(asValue.lastIndexOf('.')+1);
+        if (asValue.includes('[')) asValue = asValue.substr(0, asValue.lastIndexOf('['));
+
+        const value = get(obj, path);
+
+        // if (options.shouldIgnoreUndefined && value === undefined) continue;
+        if (options.dontOverwriteDefined && picked[asValue] !== undefined) continue;
+
+        picked[asValue] = value;
     }
 
     return picked;
