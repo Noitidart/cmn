@@ -1,4 +1,4 @@
-import { get } from 'lodash/get'
+import get from 'lodash/get'
 
 export function average(arr) {
     return sum(arr) / arr.length;
@@ -280,7 +280,7 @@ export function pickDotpath(obj, ...dotpaths) {
     return picked;
 }
 
-export function pickAsByGet(obj, ...dotpaths) {
+export function pickAsByString(obj, ...dotpaths) {
     // can do dotpath + ' as BLAH'
     // last arg can be an options object
         // // shouldIgnoreUndefined: boolean // default false - if value is undefined dont pick
