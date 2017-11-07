@@ -280,7 +280,7 @@ export function pickDotpath(obj, ...dotpaths) {
     return picked;
 }
 
-function pickAsByGet(obj, ...dotpaths) {
+export function pickAsByGet(obj, ...dotpaths) {
     // can do dotpath + ' as BLAH'
     // last arg can be an options object
         // // shouldIgnoreUndefined: boolean // default false - if value is undefined dont pick
@@ -296,7 +296,7 @@ function pickAsByGet(obj, ...dotpaths) {
 
     const picked = {};
     for (const dotpath of dotpaths) {
-        console.log('dotpath:', dotpath);
+        // console.log('dotpath:', dotpath);
         const ixAs = dotpath.indexOf(' as ');
         const hasAs = ixAs > -1;
 

@@ -2,7 +2,7 @@
 
     npm install cmn@https://github.com/Noitidart/cmn.git --save
 
-### Building
+### How to modify dev
 
 1. `edit code`
 2. `git add .`
