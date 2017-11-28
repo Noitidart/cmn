@@ -283,7 +283,7 @@ export function pickDotpath(obj, ...dotpaths) {
 export function pickAsByString(obj, ...dotpaths) {
     // can do dotpath + ' as BLAH'
     // last arg can be an options object
-        // // shouldIgnoreUndefined: boolean // default false - if value is undefined dont pick
+        // shouldIgnoreUndefined: boolean // default false - if value is undefined dont pick
         // dontOverwriteDefined: boolean // if value already picked, and it is !== undefined, should overwrite?
 
     // example:
@@ -307,7 +307,7 @@ export function pickAsByString(obj, ...dotpaths) {
 
         const value = get(obj, path);
 
-        // if (options.shouldIgnoreUndefined && value === undefined) continue;
+        if (options.shouldIgnoreUndefined && value === undefined) continue;
         if (options.dontOverwriteDefined && picked[asValue] !== undefined) continue;
 
         picked[asValue] = value;
