@@ -377,7 +377,7 @@ export async function retry(callback, {cnt, sec, interval=1000}={}) {
 
 // this shallowEqual is an exact copy (without polyfills, and in es6) of recompose shallowEqual. I just made it so that I added shouldShallow arg to shallow things deeper inside
 // this shallowEqual of recompose, is just a "import shallowEqual from 'fbjs/lib/shallowEqual'" - https://github.com/facebook/fbjs/blob/6b98068fa3836ba42ba824aee90e6c6c959225c7/packages/fbjs/src/core/shallowEqual.js
-function shallowEqual(objA, objB, shallowPicks={}/* , noConsole */) {
+export function shallowEqual(objA, objB, shallowPicks={}/* , noConsole */) {
     if (Object.is(objA, objB)) return true;
 
     if (typeof objA !== 'object' || objA === null || typeof objB !== 'object' || objB === null) return false;
