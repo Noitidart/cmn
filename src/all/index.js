@@ -377,7 +377,7 @@ export async function retry(callback, {cnt, sec, interval=1000}={}) {
 
 // this shallowEqual is an exact copy (without polyfills, and in es6) of recompose shallowEqual. I just made it so that I added shouldShallow arg to shallow things deeper inside
 // this shallowEqual of recompose, is just a "import shallowEqual from 'fbjs/lib/shallowEqual'" - https://github.com/facebook/fbjs/blob/6b98068fa3836ba42ba824aee90e6c6c959225c7/packages/fbjs/src/core/shallowEqual.js
-function shallowEqual(objA, objB, shouldShallow={}/* , noConsole */) {
+function shallowEqual(objA, objB, shallowPicks={}/* , noConsole */) {
     if (Object.is(objA, objB)) return true;
 
     if (typeof objA !== 'object' || objA === null || typeof objB !== 'object' || objB === null) return false;
@@ -393,14 +393,14 @@ function shallowEqual(objA, objB, shouldShallow={}/* , noConsole */) {
 
         const valAx = objA[key];
         const valBx = objB[key];
-        const shouldShallowBoolOrArg = shouldShallow && (key in shouldShallow ? shouldShallow[key] : shouldShallow._ALL); // true or { [key]: } or undefined
-        if (shouldShallowBoolOrArg) {
-            // shouldShallowBoolOrArg is either bool, or arg
-            const isBool = shouldShallowBoolOrArg === true;
-            const arg = isBool ? undefined : shouldShallowBoolOrArg;
+        const shouldShallowOrPicks = key in shallowPicks ? shallowPicks[key] : shallowPicks._ALL;
+        if (shouldShallowOrPicks) {
+            // shouldShallowBoolOrArg is either bool, or shallowPicksX
+            const isBool = shouldShallowOrPicks === true;
+            const shallowPicksX = isBool ? undefined : shouldShallowOrPicks;
 
-            // if (!noConsole) console.log('shallowEqual on valAx:', valAx, 'valBx:', valBx, 'arg:', arg, 'result:', shallowEqual(valAx, valBx, arg, true));
-            if (!shallowEqual(valAx, valBx, arg)) return false;
+            // if (!noConsole) console.log('shallowEqual on valAx:', valAx, 'valBx:', valBx, 'shallowPicksX:', shallowPicksX, 'result:', shallowEqual(valAx, valBx, shallowPicksX, true));
+            if (!shallowEqual(valAx, valBx, shallowPicksX)) return false;
         } else {
             // if (!noConsole) console.log('equality on valAx:', valAx, 'valBx:', valBx, 'result:', Object.is(valAx, valBx));
             if (!Object.is(valAx, valBx)) return false;
