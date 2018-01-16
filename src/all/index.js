@@ -375,6 +375,40 @@ export async function retry(callback, {cnt, sec, interval=1000}={}) {
     }
 }
 
+// this shallowEqual is an exact copy (without polyfills, and in es6) of recompose shallowEqual. I just made it so that I added shouldShallow arg to shallow things deeper inside
+// this shallowEqual of recompose, is just a "import shallowEqual from 'fbjs/lib/shallowEqual'" - https://github.com/facebook/fbjs/blob/6b98068fa3836ba42ba824aee90e6c6c959225c7/packages/fbjs/src/core/shallowEqual.js
+function shallowEqual(objA, objB, shouldShallow={}) {
+    if (Object.is(objA, objB)) return true;
+
+    if (typeof objA !== 'object' || objA === null || typeof objB !== 'object' || objB === null) return false;
+
+    const keysA = Object.keys(objA);
+    const keysB = Object.keys(objB);
+
+    if (keysA.length !== keysB.length) return false;
+
+    // Test for A's keys different from B.
+    for (const key of keysA) {
+        if (!Object.hasOwnProperty.call(objB, key)) return false;
+
+        const valAx = objA[key];
+        const valBx = objB[key];
+        const shouldShallowBoolOrArg = shouldShallow[key]; // true or { [key]: } or undefined
+        if (shouldShallowBoolOrArg) {
+            // shouldShallowBoolOrArg is either bool, or arg
+            const isBool = shouldShallowBoolOrArg === true;
+            const arg = isBool ? undefined : shouldShallowBoolOrArg;
+            // console.log('shallowEqual on valAx:', valAx, 'valBx:', valBx, 'arg:', arg);
+            if (!shallowEqual(valAx, valBx, arg)) return false;
+        } else {
+            // console.log('equality on valAx:', valAx, 'valBx:', valBx);
+            if (!Object.is(valAx, valBx)) return false;
+        }
+    }
+
+    return true;
+}
+
 // https://stackoverflow.com/a/1499916/1828637
 export function stripTags(html) {
     // html is text
