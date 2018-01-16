@@ -1,7 +1,6 @@
 // TODO: is this todo on the right comment still valid? 082117 // TODO: figure out how to make redux-offline only persist some keys, like there is no reason to persist messages
 import { combineReducers, createStore } from 'redux'
-import { pick, arrayToObject } from 'cmn/lib/all'
-import {  depth0Or1Equal } from 'cmn/lib/recompose'
+import { arrayToObject, shallowEqual } from '../../all'
 
 
 import { addElement } from './elements'
