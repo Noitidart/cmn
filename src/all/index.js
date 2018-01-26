@@ -114,6 +114,15 @@ export function dedupeCaseInsensitive(arr) {
   );
 }
 
+// export function deleteUndefined<T: {}>(obj: T): T {
+export function deleteUndefined(obj) {
+    // mutates obj
+    for (const [k, v] of Object.entries(obj)) {
+        if (v === undefined) delete obj[k];
+    }
+    return obj;
+}
+
 export function deepSetUsingString(obj, dotpath, newval) {
     // throws if set fails
     // may want to update to - http://stackoverflow.com/a/13719799/1828637
