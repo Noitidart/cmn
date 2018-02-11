@@ -4,7 +4,9 @@
   "description": "My common javascript functions",
   "main": "lib/index.js",
   "scripts": {
-    "compile": "babel src --out-dir lib",
+    "compile": "npm run prepack:babel && npm run prepack:flow",
+    "prepack:babel": "babel src/ -d lib",
+    "prepack:flow": "flow-copy-source src lib",
     "prepublishOnly": "npm run compile"
   },
   "repository": {
@@ -21,11 +23,13 @@
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-es2016": "^6.24.1",
     "babel-preset-es2017": "^6.24.1",
-    "babel-preset-react": "^6.24.1"
+    "babel-preset-react": "^6.24.1",
+    "flow-copy-source": "^1.3.0"
   }
 }
