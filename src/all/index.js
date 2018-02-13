@@ -438,12 +438,6 @@ export function timeout(ms, promise) {
     })
 }
 
-// http://stackoverflow.com/q/196972/1828637
-// consider not proper casing small words - http://php.net/manual/en/function.ucwords.php#84920 - ['of','a','the','and','an','or','nor','but','is','if','then', 'else','when', 'at','from','by','on','off','for','in','out', 'over','to','into','with'];
-export function toTitleCase(str) {
-    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-}
-
 export function urldecode (str) {
     //       discuss at: http://locutus.io/php/urldecode/
     //      original by: Philip Peterson
