@@ -7,7 +7,7 @@ import { isPlainObject, isEmpty, keyBy } from 'lodash'
 // this customizer makes it so that ref is only kept if unchanged
 // and a shallow copy is made if changed. this shallow copy continues deeply.
 // supports arrays of collections (by id).
-export default function keepUnchangedRefsOnly(objValue, srcValue) {
+export function keepUnchangedRefsOnly(objValue, srcValue) {
     if (objValue === undefined) { // do i need this?
         return srcValue;
     } else if (isPlainObject(objValue)) {
