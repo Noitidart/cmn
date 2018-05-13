@@ -1,4 +1,5 @@
 import get from 'lodash/get'
+export { default as mergeJsonDeepWithRefs } from './mergeJsonDeepWithRefs'
 
 export function average(arr) {
     return sum(arr) / arr.length;
